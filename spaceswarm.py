@@ -8,14 +8,14 @@ SPACESWARM_VERSION = (0, 5, 0)
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+BROWN = (255, 127, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-WINDOWWIDTH, WINDOWHEIGHT = 800, 600
+WINDOWWIDTH, WINDOWHEIGHT = 1024, 650
 TEXTCOLOR = WHITE
 BACKGROUNDCOLOR = BLACK
-FPS = 40
+FPS = 60
 
 EASY = -10
 MEDIUM = 0
@@ -116,7 +116,7 @@ class Explosion(GameObject):
 
 
 class Alien(GameObject):
-    image = load_image("alien.png")
+    image = load_image("enemy1.png")
     width, height = image[0].get_size()
 
     def __init__(self, speed=100, img=None):
@@ -157,7 +157,7 @@ class Alien(GameObject):
 
 
 class TinyAlien(Alien):
-    image = (pygame.transform.scale(load_image("alien.png")[0], (25,25)),)
+    image = (pygame.transform.scale(load_image("enemy1.png")[0], (25,25)),)
     width, height = image[0].get_size()
 
     def __init__(self, speed=100):
@@ -188,7 +188,7 @@ class ChangelingAlien(Alien):
 
 
 class SmartAlien(Alien):
-    image = load_image("smart_alien.png")
+    image = load_image("smart_enemy1.png")
     width, height = image[0].get_size()
 
     def __init__(self, speed=100):
@@ -345,12 +345,12 @@ class LevelController(object):
         }
 
 
-bg = load_image("bg.jpg")
+bg = load_image("space.jpg")
 clock = pygame.time.Clock()
 
 # Fonts
-title_font = pygame.font.SysFont(None, 48)
-font = pygame.font.SysFont(None, 32)
+title_font = pygame.font.Font("COLONNA.TTF", 48)
+font = pygame.font.Font("COLONNA.TTF", 32)
 
 # Load resources
 scope_image = load_image("scope.png")[0]
@@ -364,7 +364,7 @@ if pygame.mixer.get_init():
 # show the "Start" screen
 screen.blit(*bg)
 draw_text('Space Swarm!', title_font, screen, 20,
-         20, RED)
+         20, BROWN)
 draw_text('To defend Earth, fend off the aliens with your missiles.',
          font, screen, 20, 60)
 draw_text('Keep track of your firepower, be as accurate as possible.',
@@ -434,7 +434,7 @@ while True:
                 if event.key == K_SPACE:
                     if firepower > 200: # nuke!
                         shots += 1 # FIXME nukes break accuracy
-                        screen.fill(RED)
+                        screen.fill(BROWN)
                         pygame.display.flip()
                         firepower -= 150
                         aliens_killed += len(aliens)
@@ -489,14 +489,14 @@ while True:
             else:
                 level_controller.level_up()
 
-        # Redraw screen
+        # BROWNraw screen
         screen.blit(*bg)
         draw_text('Level: %s' % level_controller.level, font, screen, 0, 0)
 
-        # Draw firepower in green if we can afford burst, red if we can afford a nuke
+        # Draw firepower in green if we can afford burst, BROWN if we can afford a nuke
         fpcol = WHITE
         if firepower >= 100: fpcol = GREEN
-        if firepower >= 200: fpcol = RED
+        if firepower >= 200: fpcol = BROWN
 
         draw_text('Firepower: %s' % int(firepower), font, screen, 0, 20, fpcol)
         draw_text('Aliens killed: %s' % aliens_killed,
@@ -513,7 +513,7 @@ while True:
     if game_over:
         if not muted: game_over_sound.play()
         draw_text('GAME OVER', title_font, screen, (WINDOWWIDTH / 3),
-                 (WINDOWHEIGHT / 3), RED)
+                 (WINDOWHEIGHT / 3), BROWN)
         draw_text('Press any key to play again, or Esc to quit.', font,
              screen, (WINDOWWIDTH / 3) - 80, (WINDOWHEIGHT / 3) + 50)
     else:
